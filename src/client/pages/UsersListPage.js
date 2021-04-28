@@ -29,7 +29,6 @@ function mapStateToProps(state) {
 }
 
 const loadData = store => {
-    console.log("Hi from loaddata userList!!!!!!!!!");
     return store.dispatch(fetchUsers());
 };
 
