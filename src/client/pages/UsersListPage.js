@@ -4,6 +4,7 @@ import { fetchUsers } from "../actions";
 
 class UsersList extends Component {
     componentDidMount() {
+        console.log("called!!!");
         this.props.fetchUsers();
     }
 
@@ -28,6 +29,7 @@ function mapStateToProps(state) {
 }
 
 const loadData = store => {
+    console.log("Hi from loaddata userList!!!!!!!!!");
     return store.dispatch(fetchUsers());
 };
 
