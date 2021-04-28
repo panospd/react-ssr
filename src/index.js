@@ -23,18 +23,25 @@ app.use(express.static("public"));
 app.get("*", (req, res) => {
     const store = createStore(req);
 
-    console.log("I am here all the time mtf!!!!!!!!");
-
-    const promises = matchRoutes(Routes, req.path).map(({ route }) => {
-        console.log("Routes", route);
-        console.log("PATH", req.path);
-
-        return route.loadData ? route.loadData(store) : null;
-    });
+    const promises = matchRoutes(Routes, req.path)
+        .map(({ route }) => {
+            return route.loadData ? route.loadData(store) : null;
+        })
+        .map(promise => {
+            if (promise) {
+                return new Promise((resolve, reject) => {
+                    promise.then(resolve).catch(resolve);
+                });
+            }
+        });
 
     Promise.all(promises).then(() => {
         const context = {};
         const content = renderer(req, store, context);
+
+        if (context.url) {
+            return res.redirect(301, context.url);
+        }
 
         context.notFound && res.status(404);
 
